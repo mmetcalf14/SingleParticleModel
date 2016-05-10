@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D31DFACD1B7BFC550003C330 /* Slater_Determinant_SPM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D31DFACC1B7BFC550003C330 /* Slater_Determinant_SPM.cpp */; };
 		D33CD9A71B55BC980093A3D3 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D33CD9A61B55BC980093A3D3 /* main.cpp */; };
+		D33CD9AF1B55BE950093A3D3 /* SingleParticle_Hamiltonian_MLM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D33CD9AE1B55BE950093A3D3 /* SingleParticle_Hamiltonian_MLM.cpp */; };
+		D3B054D61CE2322700EDD402 /* CorrelationMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D3B054D51CE2322700EDD402 /* CorrelationMatrix.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -23,8 +26,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D31DFACC1B7BFC550003C330 /* Slater_Determinant_SPM.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Slater_Determinant_SPM.cpp; sourceTree = "<group>"; };
 		D33CD9A31B55BC970093A3D3 /* Single Particle Model */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Single Particle Model"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D33CD9A61B55BC980093A3D3 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		D33CD9AD1B55BCD40093A3D3 /* SingleParticle_Hamiltonian_MLM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SingleParticle_Hamiltonian_MLM.h; sourceTree = "<group>"; };
+		D33CD9AE1B55BE950093A3D3 /* SingleParticle_Hamiltonian_MLM.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SingleParticle_Hamiltonian_MLM.cpp; sourceTree = "<group>"; };
+		D3B054D41CE231FC00EDD402 /* CorrelationMatrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CorrelationMatrix.h; sourceTree = "<group>"; };
+		D3B054D51CE2322700EDD402 /* CorrelationMatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CorrelationMatrix.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +66,11 @@
 			isa = PBXGroup;
 			children = (
 				D33CD9A61B55BC980093A3D3 /* main.cpp */,
+				D33CD9AD1B55BCD40093A3D3 /* SingleParticle_Hamiltonian_MLM.h */,
+				D33CD9AE1B55BE950093A3D3 /* SingleParticle_Hamiltonian_MLM.cpp */,
+				D31DFACC1B7BFC550003C330 /* Slater_Determinant_SPM.cpp */,
+				D3B054D41CE231FC00EDD402 /* CorrelationMatrix.h */,
+				D3B054D51CE2322700EDD402 /* CorrelationMatrix.cpp */,
 			);
 			path = "Single Particle Model";
 			sourceTree = "<group>";
@@ -119,6 +132,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D33CD9A71B55BC980093A3D3 /* main.cpp in Sources */,
+				D3B054D61CE2322700EDD402 /* CorrelationMatrix.cpp in Sources */,
+				D33CD9AF1B55BE950093A3D3 /* SingleParticle_Hamiltonian_MLM.cpp in Sources */,
+				D31DFACD1B7BFC550003C330 /* Slater_Determinant_SPM.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -235,6 +251,7 @@
 				D33CD9AC1B55BC980093A3D3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
