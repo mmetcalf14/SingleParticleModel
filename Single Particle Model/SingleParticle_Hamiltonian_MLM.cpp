@@ -21,13 +21,13 @@ Hamiltonian::Hamiltonian(double _J1, double _J2, int _L, double _Delta, int _Ro,
     Delta = _Delta;
     Ro = _Ro;
     y = _y;
-    
+    cout << "COnstructing again\n";
     Set_Mat_Dim();
 }
 
 void Hamiltonian::Set_Mat_Dim()
 {
-   
+ cout << "Setting Mat dim again \n";
     Ham_Mat.resize(L,L);
     for(int i = 0; i < L; i++)
     {
@@ -73,16 +73,18 @@ void Hamiltonian::Build_Hamiltonian()
     //which computes tri-diagonal
     //if computing eigenvalues using tridiag method create full matrix!
     Ham_Mat = tmp;
-    cout << "This is the Hamiltonian: \n" << Ham_Mat << endl;
+    //cout << "This is the Hamiltonian: \n" << Ham_Mat << endl;
     Diagonalize_Hamiltonian();
 }
 
 void Hamiltonian::Diagonalize_Hamiltonian()
 {
+    cout << "Diagonalizing Hamiltonian\n";
  SelfAdjointEigenSolver<MatrixXd> Diag(Ham_Mat);
     EVal = Diag.eigenvalues();
     EVec = Diag.eigenvectors();
     
+    //cout << "Eigenvectors: " << EVec << endl;
 //    
 //    cout << "Here are the eigenvalues: \n" << EVal << endl;
 //    ofstream output;
@@ -99,7 +101,7 @@ void Hamiltonian::Diagonalize_Hamiltonian()
 //
 //    cout << "Here are the eigenvectors: \n" << EVec << endl;
    // Write_File_EV();
-    
+    cout << "Ending Diagonalization Loop \n";
     
 }
 

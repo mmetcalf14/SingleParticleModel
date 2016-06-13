@@ -11,18 +11,27 @@
 #include "/usr/local/include/Eigen/Eigen"
 #include "/usr/local/include/Eigen/Sparse"
 #include "SingleParticle_Hamiltonian_MLM.h"
+#include "CorrelationMatrix.h"
 
 int main(int argc, const char * argv[])
 {
     using namespace std;
     
-    int Nsite = 10;//keep odd number sites to pair correctly
-    int Npart = 6;
-    double J1 = 1.0;
-    double J2 = 1.0;
+    int Nsite;//keep odd number sites to pair correctly
+    int Npart;
+    double J1;
+    double J2;
     double Delta = 0.0;
     int Ro;//(Nsite +1)/2;
     double y = 0.;//y = 1/2*m*\omega^2
+    
+    double dt;
+    int Tfinal;
+
+    double Pi = 3.14159265;
+    double Phi_m = Pi/2.;
+    double t_phi;
+    char output[60];
     
     if(Nsite % 2 == 0)
     {
@@ -35,26 +44,52 @@ int main(int argc, const char * argv[])
     
     ofstream fout;
     fout.open("AlternatingChain_J1-2_J2-1_Delta0_y0.01_L21_N10_OnsiteDensity_MLM_032316.dat");
+    
+    
+    ifstream read_file("AlternatingChain_DensityProfile_RK4_DataInput.cfg");
+    assert(read_file.is_open());
+    
+    read_file >> Nsite;
+    read_file >> Npart;
+    read_file >> J1;
+    read_file >> J2;
+    read_file >> Tfinal;
+    read_file >> dt;
+    read_file >> t_phi;
+    read_file >> output;
+    
+    read_file.close();
+    
+    ofstream Fout(output);
+    assert(Fout.is_open());
+    Fout.setf(ios::scientific);
+    Fout.precision(11);
 
 
-        
+    
+    int Time_it = Tfinal/dt;
     
     Hamiltonian ham(J1, J2, Nsite, Delta, Ro, y);
-    SlaterDet SD(J1, J2, Nsite, Delta, Ro, y);
+    //SlaterDet SD(J1, J2, Nsite, Delta, Ro, y);
+    CorrMat CM(ham);
+
+//    //ham.Write_File(fout);
+//    //fout << Hamiltonian::EVal << endl;
     
-    ham.Set_Mat_Dim();
-    ham.Build_Hamiltonian();
-    ham.Diagonalize_Hamiltonian();
-    //ham.Write_File(fout);
-    //fout << Hamiltonian::EVal << endl;
-    
-    SD.SetNumber(Npart);
-    SD.Get_Gstate_FB();
-    SD.Onsite_Gstate();
-    SD.Write_File(fout);
+//Running Dynamics using microcanonical formalism
+    CM.GetNumberVariables(Npart, Nsite);
+    //CM.SetEnergyMat();//building <b^{\dagger}b> = \theta(N_p-k)this is unnecessary
+    CM.BuildCorrMat(ham);
+    CM.RungeKuttaOnCMat(ham, Fout, dt, Time_it, Phi_m, t_phi);
+
+//    SD.SetNumber(Npart);
+//    SD.Get_Gstate_FB();
+//    SD.Onsite_Gstate();
+//    SD.Write_File(fout);
     
     cout << "Done \n";
     fout.close();
+    
     
     return 0;
 }
