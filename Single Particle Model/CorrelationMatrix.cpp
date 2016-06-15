@@ -539,14 +539,25 @@ void CorrMat::SetEnergyMat(const Hamiltonian& h)
     EVec_c = h.EVec.cast<std::complex<double>>();
     
     EVec_adj = EVec_c.adjoint();
+    complex<double> sum= 0.;
     
     B_mat = EVec_c*C_mat*EVec_adj;
+    for(int i = 0; i < Nsite; i++)
+    {
+        sum+= B_mat(i,i).real();
+    }
     
-    //cout << "B_mat: \n" << B_mat << endl;
+    cout << "B_mat: \n" << B_mat << endl;
+    cout << "Sum of B_mat: \n" << sum << endl;
     
     C_mat = EVec_adj*B_mat*EVec_c;
+    sum = 0.0;
+    for(int i = 0; i < Nsite; i++)
+    {
+        sum+= C_mat(i,i).real();
+    }
     
-    //cout << "C matrix: \n" << C_mat << endl;
+    cout << "Sum of C matrix: \n" << sum << endl;
     
 }
 
