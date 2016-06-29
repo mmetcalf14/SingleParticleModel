@@ -49,7 +49,7 @@ public:
     
     void Set_Mat_Dim();
     void Build_Hamiltonian();
-    void Thouless_Hamiltonian(double t1, double t2, double h);
+    MatrixXd Thouless_Hamiltonian(double t1, double t2, double h);
     void Diagonalize_Hamiltonian(MatrixXd H);
     //void Diagonalize_ThoulessHamiltonian();
     void Write_File_EV();

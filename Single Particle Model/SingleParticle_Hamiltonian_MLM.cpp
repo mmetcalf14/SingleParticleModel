@@ -77,8 +77,9 @@ void Hamiltonian::Build_Hamiltonian()
     //cout << "This is the Hamiltonian: \n" << Ham_Mat << endl;
     Diagonalize_Hamiltonian(Ham_Mat);
 }
-void Hamiltonian::Thouless_Hamiltonian(double t1, double t2, double h)
+MatrixXd Hamiltonian::Thouless_Hamiltonian(double t1, double t2, double h)
 {
+    MatrixXd H = MatrixXd::Zero(L,L);;
     for(int i = 0; i < L; i++)
     {
         if( (i%2) == 0)
@@ -86,22 +87,22 @@ void Hamiltonian::Thouless_Hamiltonian(double t1, double t2, double h)
             
             if( (i+1) < L)
             {
-                Friendly_Ham(i+1, i) = -t1;
-                Friendly_Ham(i, i+1) = -t1;
+                H(i+1, i) = -t1;
+                H(i, i+1) = -t1;
             }
             //Ham_Mat(i,i) = Delta;
-            Friendly_Ham(i,i) = h;
+            H(i,i) = -h;
         }
         else
         {
             if( (i+1) < L)
             {
                 
-                Friendly_Ham(i+1, i) = -t2;
-                Friendly_Ham(i, i+1) = -t2;
+                H(i+1, i) = -t2;
+                H(i, i+1) = -t2;
             }
             //Ham_Mat(i,i) = -Delta;
-            Friendly_Ham(i,i) = -h;
+            H(i,i) = h;
         }
     }
     
@@ -110,6 +111,7 @@ void Hamiltonian::Thouless_Hamiltonian(double t1, double t2, double h)
 //    Friendly_Ham = tmp;
     //cout << "t1: " << t1 << " t2: " << t2 <<endl;
    // cout <<"Friendly Ham: \n"<< Friendly_Ham <<endl;
+    return H;
 }
 
 void Hamiltonian::Diagonalize_Hamiltonian(MatrixXd H)

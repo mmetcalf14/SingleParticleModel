@@ -444,7 +444,7 @@ void CorrMat::RKPeierlsOnCMat(const Hamiltonian& h, ofstream &fout, double dt, d
     //for 1D chain there are no nearest neigbors. THis has been taken care of in the equation
 }
 
-void CorrMat::RKAdiabatic(Hamiltonian & ham, ofstream &fout, ofstream &Fout, double dt, double N_it, double J1, double J2, double h_0)
+void CorrMat::RKAdiabatic(Hamiltonian & ham, ofstream &fout, ofstream &Fout, double dt, double N_it, double T, double J1, double J2, double h_0)
 {
     
     MatrixXcd k1(Nsite, Nsite);
@@ -453,59 +453,28 @@ void CorrMat::RKAdiabatic(Hamiltonian & ham, ofstream &fout, ofstream &Fout, dou
     MatrixXcd k4(Nsite, Nsite);
     MatrixXcd Ck_mat(Nsite, Nsite);
     MatrixXcd Cmat_new(Nsite, Nsite);
+    MatrixXd H1 = MatrixXd::Zero(Nsite,Nsite);
+    MatrixXd H2 = MatrixXd::Zero(Nsite,Nsite);//used for H3 as well
+    MatrixXd H4 = MatrixXd::Zero(Nsite,Nsite);
     
-    double delta_0 = 0.5;
+    double delta_0 = 0.5;//T \approx 50
     double delta;
     double J_0 = 1.;
     //double h_0 = 1.;
     double h;
-    double omega = 2* 3.14159265;
+    //double omega = (2* 3.14159265)/T;
+    double omega = (8*atan(1.0))/T;
 
     //double h_0;
     
-    double t = 0;
+    double t1,t2,t4;
     //ham.FriendHam();
     
     for(int it = 0; it <= N_it; it++)
     {
-        t = it*dt;
-
-            delta = delta_0*cos(omega*t);
-            J1 = J_0 + delta;
-            J2 = J_0 - delta;
-            h = h_0*sin(omega*t);
-            ham.Thouless_Hamiltonian(J1, J2, h);//to get H(t)
-
-        
-        k1 = dt* I*(C_mat*ham.Friendly_Ham - ham.Friendly_Ham*C_mat);//k1 = f(t,y)->H(t)
-        Ck_mat = C_mat + (1./2.)*k1;
-        
-            delta = delta_0*cos(omega*(t+(0.5*dt)));
-            J1 = J_0 + delta;
-            J2 = J_0 - delta;
-            h = h_0*sin(omega*(t+(0.5*dt)));
-            ham.Thouless_Hamiltonian(J1, J2, h); //to get H(t+dt)
-        
-        k2 = dt* I*(Ck_mat*ham.Friendly_Ham - ham.Friendly_Ham*Ck_mat);//k2 = f(t+1/2dt, y+1/2k1)
-        Ck_mat = C_mat + (1./2.)*k2;
-            
-        k3 = dt* I*(Ck_mat*ham.Friendly_Ham - ham.Friendly_Ham*Ck_mat);//k3 = f(t+1/2dt, y+1/2k2)
-        Ck_mat = C_mat + k3;
-        
-            delta = delta_0*cos(omega*(t+dt));
-            J1 = J_0 + delta;
-            J2 = J_0 - delta;
-            h = h_0*sin(omega*(t+dt));
-            ham.Thouless_Hamiltonian(J1, J2, h);//to get H(t)
-        
-        k4 = dt*I*(Ck_mat*ham.Friendly_Ham - ham.Friendly_Ham*Ck_mat);//k3 = f(t+dt, y+k3)-> H(t+dt)
-        
-        Cmat_new = C_mat+(1./6.)*k1+(1./3.)*k2+(1./3.)*k3+(1./6.)*k4;
-        C_mat = Cmat_new;
-        
-
         if(it == 0 || it == N_it/2. || it == N_it)
         {
+            
             ham.Diagonalize_Hamiltonian(ham.Friendly_Ham);//Should I diagonalize H(t) or H(t+dt)?
             //I chose H(t+dt) because Cij(t+dt)
             cout << "Setting Energy \n";
@@ -516,14 +485,60 @@ void CorrMat::RKAdiabatic(Hamiltonian & ham, ofstream &fout, ofstream &Fout, dou
             Fout << J1 << " " << B_mat(q,q).real() << endl;
             
             for(int i = 0; i < Nsite; i++)
-                {
-                 fout << i << " " << C_mat(i,i).real() << endl;
-                }
+            {
+                fout << i << " " << C_mat(i,i).real() << endl;
+            }
             fout << endl;
+            //cout "h: " << h << endl;
+            // cout << "Hamiltonians 1 \n" << H1 << endl;
+            //            cout << "Hamiltonians 2 \n" << H2 << endl;
+            //            cout << "Hamiltonians 4 \n" << H4 << endl;
+            cout << " C_mat\n" << C_mat << endl;
             
-            cout << ham.Friendly_Ham << endl;
-
+            //cout << ham.Friendly_Ham << endl;
+            
         }
+        
+        t1 = it*dt;
+        //cout << "T1: " << t1 << endl;
+        t2 = t1 + (0.5*dt);
+        t4 = t1 + dt;
+
+            delta = delta_0*cos(omega*t1);
+            J1 = J_0 + delta;
+            J2 = J_0 - delta;
+            h = h_0*sin(omega*t1);
+            H1 = ham.Thouless_Hamiltonian(J1, J2, h);//to get H(t)
+
+        
+        k1 = dt* I*(C_mat*H1 - H1*C_mat);//k1 = f(t,y)->H(t)
+        Ck_mat = C_mat + (1./2.)*k1;
+        
+            delta = delta_0*cos(omega*(t2));
+            J1 = J_0 + delta;
+            J2 = J_0 - delta;
+            h = h_0*sin(omega*(t2));
+            H2 = ham.Thouless_Hamiltonian(J1, J2, h); //to get H(t+dt)
+        
+        k2 = dt* I*(Ck_mat*H2 - H2*Ck_mat);//k2 = f(t+1/2dt, y+1/2k1)
+        Ck_mat = C_mat + (1./2.)*k2;
+            
+        k3 = dt* I*(Ck_mat*H2 - H2*Ck_mat);//k3 = f(t+1/2dt, y+1/2k2)
+        Ck_mat = C_mat + k3;
+        
+            delta = delta_0*cos(omega*t4);
+            J1 = J_0 + delta;
+            J2 = J_0 - delta;
+            h = h_0*sin(omega*t4);
+            H4 = ham.Thouless_Hamiltonian(J1, J2, h);//to get H(t)
+        
+        k4 = dt*I*(Ck_mat*H4 - H4*Ck_mat);//k3 = f(t+dt, y+k3)-> H(t+dt)
+        
+        Cmat_new = C_mat+(1./6.)*k1+(1./3.)*k2+(1./3.)*k3+(1./6.)*k4;
+        C_mat = Cmat_new;
+        
+
+
         
     }
     //end RK4
@@ -547,8 +562,8 @@ void CorrMat::SetEnergyMat(const Hamiltonian& h)
         sum+= B_mat(i,i).real();
     }
     
-    cout << "B_mat: \n" << B_mat << endl;
-    cout << "Sum of B_mat: \n" << sum << endl;
+    //cout << "B_mat: \n" << B_mat << endl;
+    //cout << "Sum of B_mat: \n" << sum << endl;
     
     C_mat = EVec_adj*B_mat*EVec_c;
     sum = 0.0;
@@ -557,7 +572,7 @@ void CorrMat::SetEnergyMat(const Hamiltonian& h)
         sum+= C_mat(i,i).real();
     }
     
-    cout << "Sum of C matrix: \n" << sum << endl;
+    //cout << "Sum of C matrix: \n" << sum << endl;
     
 }
 

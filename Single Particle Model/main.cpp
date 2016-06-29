@@ -96,7 +96,7 @@ int main(int argc, const char * argv[])
     CM.BuildCorrMat(ham);
     cout << "3\n";
     //CM.RungeKuttaOnCMat(ham, Fout, dt, Time_it, Phi_m, t_phi);
-    CM.RKAdiabatic(ham, Fout, FFout, dt, Time_it, J1, J2, h);
+    CM.RKAdiabatic(ham, Fout, FFout, dt, Time_it, Tfinal, J1, J2, h);
     
 
 //    SD.SetNumber(Npart);
