@@ -27,6 +27,7 @@ private:
     double J1, J2, Delta;
     int Ro;
     double y;
+    MatrixXd Friendly_Ham;
     
     
 protected:
@@ -39,13 +40,20 @@ public:
     VectorXd EVal;
     MatrixXd EVec;
     
+//    VectorXcd EVal_c;
+//    MatrixXcd EVec_c;
+    
+    
     Hamiltonian();
     Hamiltonian(double _J1, double _J2, int _L, double _Delta, int _Ro, double _y);
     
     void Set_Mat_Dim();
     void Build_Hamiltonian();
-    void Diagonalize_Hamiltonian();
+    MatrixXd Thouless_Hamiltonian(double t1, double t2, double h);
+    void Diagonalize_Hamiltonian(MatrixXd H);
+    //void Diagonalize_ThoulessHamiltonian();
     void Write_File_EV();
+    inline void FriendHam(){Friendly_Ham = Ham_Mat;}
     
     
     

@@ -15,27 +15,34 @@ using namespace Eigen;
 class CorrMat
 {
 private:
-    
-    MatrixXd B_mat;
+
+    MatrixXcd B_mat;
     MatrixXcd C_mat;
-    
+
     int Nsite;
     int Np;
-    
+
     complex<double> I;
     complex<double> tbar;
-    
+
 protected:
-    
+
 public:
-    
+
     CorrMat(const Hamiltonian&){};
     void GetNumberVariables(int _Np, int _Nsite);
-    void SetEnergyMat();
+    void SetEnergyMat(const Hamiltonian& h);
     void BuildCorrMat(const Hamiltonian&);
-    void RungeKuttaOnCMat(const Hamiltonian&, ofstream &fout, double dt, double N_it, double Phi_max, double t_p);
+    void RKPeierlsOnCMat(const Hamiltonian&, ofstream &fout, double dt,
+      double N_it, double Phi_max, double t_p);
+    void RKAdiabatic(Hamiltonian& ham, ofstream &fout, ofstream &Fout,
+      const double dt, const double N_it, const double T, const double J_0,
+      const double delta0, const double h_0);
+    void ClearHam();
+
+    //void RKThouless(const Hamiltonian&, ofstream &fout, double dt, double N_it, double Phi_max, double t_p);
     //void OnsiteDensity(ofstream &fout);
-    
+
 };
 
 #endif /* CorrelationMatrix_h */
